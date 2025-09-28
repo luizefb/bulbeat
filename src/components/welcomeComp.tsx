@@ -11,6 +11,40 @@ const WelcomeComp = () => {
   const [isDownloading, setIsDownloading] = useState(false)
   const [downloadProgress, setDownloadProgress] = useState(0)
 
+  const downloadVideo = async (url: string) => {
+    try {
+      setIsDownloading(true)
+      setDownloadProgress(0)
+
+      // Simulate progress
+      const progressInterval = setInterval(() => {
+        setDownloadProgress(prev => {
+          if (prev >= 90) return prev
+          return prev + Math.random() * 10
+        })
+      }, 500)
+
+      // Simulate download process
+      await new Promise(resolve => setTimeout(resolve, 3000))
+      
+      clearInterval(progressInterval)
+      setDownloadProgress(100)
+      
+      // Show success message
+      alert('Download simulado concluído!')
+
+    } catch (error) {
+      console.error('Download error:', error)
+      alert(`Erro: ${error instanceof Error ? error.message : 'Erro desconhecido'}`)
+      setDownloadProgress(0)
+    } finally {
+      setTimeout(() => {
+        setIsDownloading(false)
+        setDownloadProgress(0)
+      }, 2000)
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4">
       {/* Container principal com animação */}
@@ -35,7 +69,7 @@ const WelcomeComp = () => {
             duration={0.8}
             className="text-lg md:text-xl text-green-400 opacity-90"
           >
-            Sua jornada começa aqui
+            Baixe vídeos do YouTube em MP4
           </AnimatedContent>
         </AnimatedContent>
 
@@ -49,15 +83,15 @@ const WelcomeComp = () => {
           <InputField
             value={inputValue}
             onChange={setInputValue}
-            placeholder="Adicione a URL da sua música aqui..."
+            placeholder="Cole a URL do YouTube aqui..."
             type="text"
             animation="scaleIn"
             delay={0}
             duration={0.6}
             autoFocus={true}
             onEnterPress={() => {
-              if (inputValue.trim()) {
-                alert(`Olá, ${inputValue}! Bem-vindo ao Bulbeat!`)
+              if (inputValue.trim() && !isDownloading) {
+                downloadVideo(inputValue.trim())
               }
             }}
           />
@@ -89,24 +123,7 @@ const WelcomeComp = () => {
           <button
             onClick={() => {
               if (inputValue.trim() && !isDownloading) {
-                setIsDownloading(true)
-                setDownloadProgress(0)
-                
-                // Simulate download progress (remove this when implementing real download)!!!
-                const interval = setInterval(() => {
-                  setDownloadProgress(prev => {
-                    if (prev >= 100) {
-                      clearInterval(interval)
-                      setTimeout(() => {
-                        setIsDownloading(false)
-                        setDownloadProgress(0)
-                        alert(`Download concluído! ${inputValue}`)
-                      }, 1000)
-                      return 100
-                    }
-                    return prev + Math.random() * 15
-                  })
-                }, 200)
+                downloadVideo(inputValue.trim())
               }
             }}
             disabled={isDownloading || !inputValue.trim()}
@@ -116,7 +133,7 @@ const WelcomeComp = () => {
                 : 'bg-gradient-to-r from-green-400 to-green-600 text-white hover:from-green-500 hover:to-green-700 hover:scale-105 hover:shadow-green-400/25'
             }`}
           >
-            {isDownloading ? 'Baixando...' : 'Baixar'}
+            {isDownloading ? 'Baixando...' : 'Baixar MP4'}
           </button>
         </AnimatedContent>
       </div>
