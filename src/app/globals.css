@@ -82,7 +82,7 @@
   box-sizing: border-box;
 }
 
-*:not(button):not(input):not(textarea):not(select) {
+*:not(button):not(input):not(textarea):not(select):not(.progress-container) {
   padding: 0;
   margin: 0;
 }

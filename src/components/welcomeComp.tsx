@@ -4,9 +4,12 @@ import React, { useState } from 'react'
 import { AnimatedContent } from './AnimatedContent'
 import { SplitText } from './SplitText'
 import InputField from './inputField'
+import ProgressBar from './ProgressBar'
 
 const WelcomeComp = () => {
   const [inputValue, setInputValue] = useState('')
+  const [isDownloading, setIsDownloading] = useState(false)
+  const [downloadProgress, setDownloadProgress] = useState(0)
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4">
@@ -60,6 +63,22 @@ const WelcomeComp = () => {
           />
         </AnimatedContent>
 
+        {/* Progress bar - aparece quando download está ativo */}
+        <AnimatedContent
+          animation="fadeInUp"
+          delay={0}
+          duration={0.6}
+          className="flex justify-center"
+        >
+          <ProgressBar
+            isVisible={isDownloading}
+            progress={downloadProgress}
+            animation="scaleIn"
+            delay={0}
+            duration={0.4}
+          />
+        </AnimatedContent>
+
         {/* Botão de ação com animação */}
         <AnimatedContent
           animation="fadeInUp"
@@ -69,13 +88,35 @@ const WelcomeComp = () => {
         >
           <button
             onClick={() => {
-              if (inputValue.trim()) {
-                alert(`Olá, ${inputValue}! Bem-vindo ao Bulbeat!`)
+              if (inputValue.trim() && !isDownloading) {
+                setIsDownloading(true)
+                setDownloadProgress(0)
+                
+                // Simulate download progress (remove this when implementing real download)!!!
+                const interval = setInterval(() => {
+                  setDownloadProgress(prev => {
+                    if (prev >= 100) {
+                      clearInterval(interval)
+                      setTimeout(() => {
+                        setIsDownloading(false)
+                        setDownloadProgress(0)
+                        alert(`Download concluído! ${inputValue}`)
+                      }, 1000)
+                      return 100
+                    }
+                    return prev + Math.random() * 15
+                  })
+                }, 200)
               }
             }}
-            className="py-2 px-8 mt-4 mb-4 bg-gradient-to-r from-green-400 to-green-600 text-white font-semibold rounded-lg hover:from-green-500 hover:to-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-400/25"
+            disabled={isDownloading || !inputValue.trim()}
+            className={`py-2 px-8 mt-4 mb-4 font-semibold rounded-lg transform transition-all duration-300 shadow-lg ${
+              isDownloading || !inputValue.trim()
+                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                : 'bg-gradient-to-r from-green-400 to-green-600 text-white hover:from-green-500 hover:to-green-700 hover:scale-105 hover:shadow-green-400/25'
+            }`}
           >
-            Baixar
+            {isDownloading ? 'Baixando...' : 'Baixar'}
           </button>
         </AnimatedContent>
       </div>
