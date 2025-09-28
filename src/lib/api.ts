@@ -1,5 +1,5 @@
 // API service for YouTube download functionality
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1/youtube';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bulbeat-backend.onrender.com/api/v1/youtube';
 
 export interface VideoInfo {
   id: string;
@@ -54,8 +54,23 @@ class YouTubeApiService {
     });
 
     if (!response.ok) {
-      const errorData: ApiError = await response.json();
-      throw new Error(errorData.message.join(', '));
+      let errorMessage = `Erro ${response.status}: ${response.statusText}`;
+      
+      try {
+        const errorData = await response.json();
+        if (errorData.message) {
+          if (Array.isArray(errorData.message)) {
+            errorMessage = errorData.message.join(', ');
+          } else if (typeof errorData.message === 'string') {
+            errorMessage = errorData.message;
+          }
+        }
+      } catch (parseError) {
+        // Se não conseguir fazer parse do JSON, usa a mensagem padrão
+        console.error('Erro ao fazer parse da resposta de erro:', parseError);
+      }
+      
+      throw new Error(errorMessage);
     }
 
     return response.json();
@@ -76,8 +91,23 @@ class YouTubeApiService {
     });
 
     if (!response.ok) {
-      const errorData: ApiError = await response.json();
-      throw new Error(errorData.message.join(', '));
+      let errorMessage = `Erro ${response.status}: ${response.statusText}`;
+      
+      try {
+        const errorData = await response.json();
+        if (errorData.message) {
+          if (Array.isArray(errorData.message)) {
+            errorMessage = errorData.message.join(', ');
+          } else if (typeof errorData.message === 'string') {
+            errorMessage = errorData.message;
+          }
+        }
+      } catch (parseError) {
+        // Se não conseguir fazer parse do JSON, usa a mensagem padrão
+        console.error('Erro ao fazer parse da resposta de erro:', parseError);
+      }
+      
+      throw new Error(errorMessage);
     }
 
     return response.blob();
@@ -89,6 +119,7 @@ class YouTubeApiService {
   }
 
   async downloadVideo(url: string, format: string = 'best[ext=mp4]/best'): Promise<Blob> {
+    console.log('Iniciando download de vídeo:', { url, format });
     return this.makeDownloadRequest('/download', {
       url,
       format,
@@ -98,6 +129,7 @@ class YouTubeApiService {
   }
 
   async downloadAudio(url: string): Promise<Blob> {
+    console.log('Iniciando download de áudio:', { url });
     return this.makeDownloadRequest('/download-audio', { url });
   }
 
