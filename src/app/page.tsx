@@ -1,6 +1,7 @@
 import WelcomeComp from "@/components/welcomeComp";
 import ClickSpark from "@/components/ClickSpark";
 import PixelBlast from "@/components/PixelBlast";
+import UrlTester from "@/components/UrlTester";
 
 export default function Home() {
   return (
@@ -30,6 +31,9 @@ export default function Home() {
           <WelcomeComp />
         </ClickSpark>
       </div>
+      
+      {/* Debug Tools */}
+      <UrlTester />
     </main>
   );
 }

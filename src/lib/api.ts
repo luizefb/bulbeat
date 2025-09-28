@@ -114,23 +114,69 @@ class YouTubeApiService {
   }
 
   async getVideoInfo(url: string): Promise<VideoInfo> {
+    console.log('Obtendo informações do vídeo:', url);
+    
+    if (!this.isValidYouTubeUrl(url)) {
+      throw new Error('URL do YouTube inválida');
+    }
+    
     const encodedUrl = encodeURIComponent(url);
-    return this.makeRequest<VideoInfo>(`/info?url=${encodedUrl}`);
+    console.log('URL codificada:', encodedUrl);
+    
+    try {
+      const result = await this.makeRequest<VideoInfo>(`/info?url=${encodedUrl}`);
+      console.log('Informações do vídeo obtidas:', result);
+      return result;
+    } catch (error) {
+      console.error('Erro ao obter informações do vídeo:', error);
+      throw error;
+    }
   }
 
   async downloadVideo(url: string, format: string = 'best[ext=mp4]/best'): Promise<Blob> {
     console.log('Iniciando download de vídeo:', { url, format });
-    return this.makeDownloadRequest('/download', {
+    
+    if (!this.isValidYouTubeUrl(url)) {
+      throw new Error('URL do YouTube inválida');
+    }
+    
+    const requestBody = {
       url,
       format,
       quality: 'best',
       output: '%(title)s.%(ext)s'
-    });
+    };
+    
+    console.log('Corpo da requisição:', requestBody);
+    
+    try {
+      const result = await this.makeDownloadRequest('/download', requestBody);
+      console.log('Download de vídeo concluído');
+      return result;
+    } catch (error) {
+      console.error('Erro no download de vídeo:', error);
+      throw error;
+    }
   }
 
   async downloadAudio(url: string): Promise<Blob> {
     console.log('Iniciando download de áudio:', { url });
-    return this.makeDownloadRequest('/download-audio', { url });
+    
+    if (!this.isValidYouTubeUrl(url)) {
+      throw new Error('URL do YouTube inválida');
+    }
+    
+    const requestBody = { url };
+    console.log('Corpo da requisição:', requestBody);
+    
+    try {
+      const result = await this.makeDownloadRequest('/download-audio', requestBody);
+      console.log('Download de áudio concluído');
+      return result;
+    } catch (error) {
+      console.error('Erro no download de áudio:', error);
+      throw error;
+    }
   }
 
   async healthCheck(): Promise<{ status: string; timestamp: string }> {
@@ -139,15 +185,37 @@ class YouTubeApiService {
 
   // Utility function to validate YouTube URL
   isValidYouTubeUrl(url: string): boolean {
-    const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|embed\/)|youtu\.be\/)[\w-]+/;
-    return youtubeRegex.test(url);
+    // Padrões mais abrangentes para URLs do YouTube
+    const youtubePatterns = [
+      /^(https?:\/\/)?(www\.)?youtube\.com\/watch\?v=[\w-]+/,
+      /^(https?:\/\/)?(www\.)?youtube\.com\/embed\/[\w-]+/,
+      /^(https?:\/\/)?(www\.)?youtube\.com\/v\/[\w-]+/,
+      /^(https?:\/\/)?youtu\.be\/[\w-]+/,
+      /^(https?:\/\/)?(www\.)?youtube\.com\/shorts\/[\w-]+/,
+      /^(https?:\/\/)?(www\.)?m\.youtube\.com\/watch\?v=[\w-]+/,
+    ];
+    
+    const isValid = youtubePatterns.some(pattern => pattern.test(url));
+    console.log('Validação de URL:', { url, isValid });
+    return isValid;
   }
 
   // Utility function to extract video ID from URL
   extractVideoId(url: string): string | null {
-    const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/;
-    const match = url.match(regex);
-    return match ? match[1] : null;
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/|m\.youtube\.com\/watch\?v=)([^&\n?#]+)/,
+    ];
+    
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match && match[1]) {
+        console.log('Video ID extraído:', match[1]);
+        return match[1];
+      }
+    }
+    
+    console.log('Não foi possível extrair o Video ID da URL:', url);
+    return null;
   }
 
   // Utility function to trigger file download
