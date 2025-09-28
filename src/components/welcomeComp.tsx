@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { AnimatedContent } from './AnimatedContent'
 import { SplitText } from './SplitText'
+import InputField from './inputField'
 
 const WelcomeComp = () => {
   const [inputValue, setInputValue] = useState('')
@@ -10,20 +11,20 @@ const WelcomeComp = () => {
   return (
     <div className="min-h-screen bg-[#060010] flex flex-col items-center justify-center px-4">
       {/* Container principal com animação */}
-      <AnimatedContent
-        animation="fadeInUp"
-        delay={0.2}
-        duration={0.8}
-        className="text-center max-w-2xl mx-auto"
-      >
+      <div className="text-center max-w-2xl mx-auto space-y-24">
         {/* Título de boas-vindas com animação de texto */}
-        <div className="mb-12">
+        <AnimatedContent
+          animation="fadeInUp"
+          delay={0.2}
+          duration={0.8}
+          className="space-y-4"
+        >
           <SplitText
             text="Bem-vindo ao Bulbeat"
             animation="fadeInUp"
             delay={0.4}
             duration={0.6}
-            className="text-4xl md:text-6xl font-bold text-white mb-4"
+            className="text-4xl md:text-6xl font-bold text-white"
           />
           <AnimatedContent
             animation="fadeIn"
@@ -33,25 +34,30 @@ const WelcomeComp = () => {
           >
             Sua jornada começa aqui
           </AnimatedContent>
-        </div>
+        </AnimatedContent>
 
         {/* Input centralizado com animação */}
         <AnimatedContent
           animation="scaleIn"
           delay={1.2}
           duration={0.6}
-          className="w-full max-w-md mx-auto"
+          className="flex justify-center"
         >
-          <div className="relative">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Digite seu nome ou email..."
-              className="w-full px-6 py-4 bg-transparent border-2 border-green-400/30 rounded-lg text-white placeholder-gray-400 focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-400/20 transition-all duration-300 text-center text-lg"
-            />
-            <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-green-400/5 to-transparent pointer-events-none"></div>
-          </div>
+          <InputField
+            value={inputValue}
+            onChange={setInputValue}
+            placeholder="Adicione a URL da sua música aqui..."
+            type="text"
+            animation="scaleIn"
+            delay={0}
+            duration={0.6}
+            autoFocus={true}
+            onEnterPress={() => {
+              if (inputValue.trim()) {
+                alert(`Olá, ${inputValue}! Bem-vindo ao Bulbeat!`)
+              }
+            }}
+          />
         </AnimatedContent>
 
         {/* Botão de ação com animação */}
@@ -59,7 +65,7 @@ const WelcomeComp = () => {
           animation="fadeInUp"
           delay={1.4}
           duration={0.6}
-          className="mt-8"
+          className="flex justify-center"
         >
           <button
             onClick={() => {
@@ -78,13 +84,13 @@ const WelcomeComp = () => {
           animation="fadeIn"
           delay={1.6}
           duration={1.0}
-          className="mt-16 flex justify-center space-x-4"
+          className="flex justify-center space-x-4"
         >
           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
           <div className="w-2 h-2 bg-green-400/60 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
           <div className="w-2 h-2 bg-green-400/40 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
         </AnimatedContent>
-      </AnimatedContent>
+      </div>
     </div>
   )
 }
