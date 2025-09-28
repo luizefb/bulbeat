@@ -57,59 +57,62 @@ const InputField: React.FC<InputFieldProps> = ({
       duration={duration}
       className={`w-full max-w-md mx-auto ${className}`}
     >
-      <div className="group flex flex-col items-center justify-center">
-        {/* Input principal */}
-        <input
-          ref={inputRef}
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          onKeyPress={handleKeyPress}
-          placeholder={placeholder}
-          disabled={disabled}
-          className={`
-            w-full h-18 px-6 py-12 bg-transparent border-2 rounded-lg text-white 
-            placeholder-gray-400 focus:outline-none transition-all duration-300 
-            text-center text-lg font-medium
+      <div className="group relative flex flex-col items-center justify-center">
+        {/* Container do input com posicionamento relativo */}
+        <div className="relative w-full mt-4">
+          {/* Input principal */}
+          <input
+            ref={inputRef}
+            type={type}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            onKeyPress={handleKeyPress}
+            placeholder={placeholder}
+            disabled={disabled}
+            className={`
+              w-full py-4 px-4 pr-12 mt-2 bg-transparent border-2 rounded-xl text-white 
+              placeholder-gray-400 focus:outline-none transition-all duration-300 
+              text-center text-lg font-medium
+              ${isFocused || hasValue 
+                ? 'border-green-400 shadow-lg shadow-green-400/20' 
+                : 'border-green-400/30 hover:border-green-400/50'
+              }
+              ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-text'}
+              group-hover:border-green-400/60
+            `}
+          />
+          
+          {/* Overlay com gradiente animado - mais arredondado */}
+          <div className={`
+            absolute inset-0 rounded-xl pointer-events-none transition-all duration-300
             ${isFocused || hasValue 
-              ? 'border-green-400 shadow-lg shadow-green-400/20' 
-              : 'border-green-400/30 hover:border-green-400/50'
+              ? 'bg-gradient-to-r from-green-400/10 via-green-400/5 to-transparent' 
+              : 'bg-gradient-to-r from-green-400/5 to-transparent'
             }
-            ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-text'}
-            group-hover:border-green-400/60
-          `}
-        />
-        
-        {/* Overlay com gradiente animado */}
-        <div className={`
-          absolute inset-0 rounded-lg pointer-events-none transition-all duration-300
-          ${isFocused || hasValue 
-            ? 'bg-gradient-to-r from-green-400/10 via-green-400/5 to-transparent' 
-            : 'bg-gradient-to-r from-green-400/5 to-transparent'
-          }
-        `} />
-        
-        {/* Efeito de brilho no foco */}
-        <div className={`
-          absolute inset-0 rounded-lg pointer-events-none transition-all duration-500
-          ${isFocused 
-            ? 'bg-gradient-to-r from-transparent via-green-400/20 to-transparent animate-pulse' 
-            : 'opacity-0'
-          }
-        `} />
-        
-        {/* Indicador de status */}
-        <div className={`
-          absolute top-2 right-2 w-2 h-2 rounded-full transition-all duration-300
-          ${isFocused 
-            ? 'bg-green-400 shadow-lg shadow-green-400/50' 
-            : hasValue 
-              ? 'bg-green-400/60' 
-              : 'bg-green-400/30'
-          }
-        `} />
+          `} />
+          
+          {/* Efeito de brilho no foco - mais suave e arredondado */}
+          <div className={`
+            absolute inset-0 rounded-xl pointer-events-none transition-all duration-500
+            ${isFocused 
+              ? 'bg-gradient-to-r from-transparent via-green-400/15 to-transparent animate-pulse' 
+              : 'opacity-0'
+            }
+          `} />
+          
+          {/* Indicador de status - posicionado dentro do input */}
+          <div className={`
+            absolute top-1/2 right-3 transform -translate-y-1/2 w-2.5 h-2.5 rounded-full transition-all duration-300
+            ${isFocused 
+              ? 'bg-green-400 shadow-lg shadow-green-400/50 animate-pulse' 
+              : hasValue 
+                ? 'bg-green-400/70' 
+                : 'bg-green-400/40'
+            }
+          `} />
+        </div>
       </div>
       
       {/* Texto de ajuda opcional */}
