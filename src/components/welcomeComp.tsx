@@ -9,7 +9,7 @@ const WelcomeComp = () => {
   const [inputValue, setInputValue] = useState('')
 
   return (
-    <div className="min-h-screen bg-[#060010] flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4">
       {/* Container principal com animação */}
       <div className="text-center max-w-2xl mx-auto space-y-24">
         {/* Título de boas-vindas com animação de texto */}
