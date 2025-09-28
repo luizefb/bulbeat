@@ -518,7 +518,7 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
         );
         const noisePass = new EffectPass(camera, noiseEffect);
         noisePass.renderToScreen = true;
-        if (composer && composer.passes.length > 0) composer.passes.forEach(p => ((p as EffectPass).renderToScreen = false));
+        if (composer && composer.passes.length > 0) composer.passes.forEach(p => ((p as { renderToScreen: boolean }).renderToScreen = false));
         composer.addPass(noisePass);
       }
       if (composer) composer.setSize(renderer.domElement.width, renderer.domElement.height);
@@ -564,13 +564,12 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
         if (composer) {
           if (touch) touch.update();
           composer.passes.forEach(p => {
-            // Access effects through the public API
-            if ('effects' in p && Array.isArray((p as any).effects)) {
-              (p as any).effects.forEach((eff: Effect) => {
+            const passWithEffects = p as { effects?: Effect[] };
+            if (passWithEffects.effects)
+              passWithEffects.effects.forEach((eff: Effect) => {
                 const u = eff.uniforms?.get('uTime');
                 if (u) u.value = uniforms.uTime.value;
               });
-            }
           });
           composer.render();
         } else renderer.render(scene, camera);
