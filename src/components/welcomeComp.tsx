@@ -73,22 +73,10 @@ const WelcomeComp = () => {
                 alert(`Olá, ${inputValue}! Bem-vindo ao Bulbeat!`)
               }
             }}
-            className="px-8 py-3 bg-gradient-to-r from-green-400 to-green-600 text-white font-semibold rounded-lg hover:from-green-500 hover:to-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-400/25"
+            className="py-2 px-8 mt-4 mb-4 bg-gradient-to-r from-green-400 to-green-600 text-white font-semibold rounded-lg hover:from-green-500 hover:to-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-green-400/25"
           >
-            Continuar
+            Baixar
           </button>
-        </AnimatedContent>
-
-        {/* Elementos decorativos */}
-        <AnimatedContent
-          animation="fadeIn"
-          delay={1.6}
-          duration={1.0}
-          className="flex justify-center space-x-4"
-        >
-          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          <div className="w-2 h-2 bg-green-400/60 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-          <div className="w-2 h-2 bg-green-400/40 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
         </AnimatedContent>
       </div>
     </div>

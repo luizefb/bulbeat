@@ -80,6 +80,9 @@
 
 * {
   box-sizing: border-box;
+}
+
+*:not(button):not(input):not(textarea):not(select) {
   padding: 0;
   margin: 0;
 }
