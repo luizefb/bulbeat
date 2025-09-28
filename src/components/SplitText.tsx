@@ -28,7 +28,7 @@ const SplitText: React.FC<SplitTextProps> = ({
     const chars = ref.current.querySelectorAll('.char')
     
     // Configuração inicial
-    chars.forEach((char, index) => {
+    chars.forEach((char) => {
       switch (animation) {
         case 'fadeInUp':
           gsap.set(char, { opacity: 0, y: 20 })
